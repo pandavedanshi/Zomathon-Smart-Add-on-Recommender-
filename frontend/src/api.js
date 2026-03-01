@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // ── Axios instance — all requests go through here ─────
 const api = axios.create({
-  baseURL: 'http://localhost:8000',
+  baseURL: 'https://vedanshipanda-zomathon-api.hf.space',
   timeout: 6000,
   headers: {
     'Content-Type': 'application/json',
