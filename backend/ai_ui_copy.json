@@ -1,0 +1,35 @@
+{
+    "Green Salad": {
+        "default": "Add some crunch to your meal!",
+        "morning": "Keep it light and fresh."
+    },
+    "Tandoori Roti": {
+        "default": "Hot from the tandoor, perfect for your gravy!",
+        "morning": "A warm start to your day."
+    },
+    "Papad": {
+        "default": "The ultimate crispy sidekick.",
+        "late_night": "A perfect midnight crunch."
+    },
+    "Cold Drink": {
+        "default": "Wash it down with a chilled classic.",
+        "morning": "A refreshing start to your day."
+    },
+    "Steamed Rice": {
+        "default": "The perfect canvas for your curries.",
+        "morning": "A comforting classic."
+    },
+    "Filter Coffee": {
+        "default": "A hot classic to complete your meal!",
+        "morning": "Start your day right with a fresh brew."
+    },
+    "Garlic Naan": {
+        "default": "Hot, buttery, and packed with flavor."
+    },
+    "French Fries": {
+        "default": "Crispy, golden, and absolutely irresistible."
+    },
+    "Gulab Jamun": {
+        "default": "End your meal on a perfect sweet note!"
+    }
+}
