@@ -1,21 +1,18 @@
 import axios from 'axios';
 
-// ── Axios instance — all requests go through here ─────
 const api = axios.create({
-  baseURL: 'http://localhost:8000',
+  baseURL: 'https://vedanshipanda-zomathon-api.hf.space',
   timeout: 6000,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// ── Request interceptor — log outgoing calls in dev ───
 api.interceptors.request.use((config) => {
   console.log(`[API] ${config.method.toUpperCase()} ${config.baseURL}${config.url}`, config.data);
   return config;
 });
 
-// ── Response interceptor — unwrap data, log errors ────
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -25,8 +22,6 @@ api.interceptors.response.use(
   }
 );
 
-// ── Recommendation endpoint ───────────────────────────
-// Matches CartPayload in main.py exactly
 export const getRecommendations = (payload) =>
   api.post('/api/recommend', payload).then((res) => res.data);
 
