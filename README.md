@@ -215,48 +215,12 @@ Health check endpoint used by Render.
 
 ---
 
-## ☁️ Deployment
-
-### Backend → Render
-
-1. Push repo to GitHub
-2. Go to [render.com](https://render.com) → New → Web Service
-3. Connect your GitHub repo — Render auto-detects `render.yaml`
-4. Click **Apply** and wait for the build
-5. Copy your live URL: `https://zomathon-backend.onrender.com`
-
-### Frontend → Vercel
-
-1. Go to [vercel.com](https://vercel.com) → New Project → import repo
-2. Set **Root Directory** to `frontend`
-3. Add environment variable:
-   - **Key:** `REACT_APP_API_URL`
-   - **Value:** `https://zomathon-backend.onrender.com`
-4. Click **Deploy**
-
-### After deployment — update CORS
-
-Add your Vercel URL to `allow_origins` in `backend/main.py`:
-
-```python
-allow_origins=[
-    "http://localhost:3000",
-    "https://your-app.vercel.app",  # ← add this
-]
-```
-
-Push the change — Render will auto-redeploy.
-
-> ⚠️ **Note:** Render's free tier spins down after 15 minutes of inactivity. The first request after sleep may take ~30 seconds.
-
----
-
 ## 📁 Key Files Explained
 
 ### `backend/main.py`
-- Loads model + mappings + AI copy on startup
+- Loads model + mappings + AI copy on startup using `__file__`-relative absolute paths
 - Validates all incoming fields with Pydantic V2 `@field_validator`
-- Runs `predict_proba` → sorts top 5 → enriches with AI copy
+- Runs `xgb.Booster.predict()` via DMatrix → sorts top 5 → enriches with AI copy
 - Handles cold start fallback automatically
 
 ### `frontend/src/api.js`
@@ -283,7 +247,8 @@ Push the change — Render will auto-redeploy.
 - All 8 `CartPayload` fields in `main.py` must stay in sync with the feature order the XGBoost model was trained on
 - `target_item_mapping.json` must match the label encoding used during training — do not reorder
 - `REACT_APP_` prefix is required by Create React App for env vars to be accessible in the browser
-- The `render.yaml` `startCommand` uses `$PORT` — Render injects this automatically; do not hardcode a port
+- Model is loaded using `xgb.Booster` (not `XGBClassifier`) — no scikit-learn dependency required
+- XGBoost is pinned to `==1.7.6` to avoid the `nvidia-nccl-cu12` GPU library being pulled as a dependency on Linux
 
 ---
 
@@ -291,4 +256,4 @@ Push the change — Render will auto-redeploy.
 
 This project was built as part of the **Zomathon hackathon** — a challenge to build intelligent, data-driven features for food delivery experiences using machine learning.
 
----
+---
