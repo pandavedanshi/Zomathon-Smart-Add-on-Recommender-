@@ -6,6 +6,8 @@ import json
 import numpy as np
 import time
 
+import os
+
 # ── App setup ─────────────────────────────────────────────────────────────────
 app = FastAPI(
     title="Zomathon CSAO Recommendation API",
@@ -19,6 +21,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "http://127.0.0.1:3000",
+        "*" # Allow Vercel frontend requests as well
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -28,16 +31,18 @@ app.add_middleware(
 # ── Load artifacts on startup ─────────────────────────────────────────────────
 print("[SYSTEM] Booting up and loading artifacts into memory...")
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 model = xgb.XGBClassifier()
-model.load_model("xgboost_addon_model.json")
+model.load_model(os.path.join(BASE_DIR, "xgboost_addon_model.json"))
 print("[OK] XGBoost model loaded.")
 
-with open("target_item_mapping.json", "r") as f:
+with open(os.path.join(BASE_DIR, "target_item_mapping.json"), "r") as f:
     mapping_dict = json.load(f)
 reverse_mapping = {int(v): k for k, v in mapping_dict.items()}
 print(f"[OK] Item mapping loaded — {len(reverse_mapping)} items.")
 
-with open("ai_ui_copy.json", "r") as f:
+with open(os.path.join(BASE_DIR, "ai_ui_copy.json"), "r") as f:
     ai_copy_dict = json.load(f)
 print(f"[OK] AI copy loaded — {len(ai_copy_dict)} entries.")
 
