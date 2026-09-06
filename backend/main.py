@@ -33,7 +33,7 @@ print("[SYSTEM] Booting up and loading artifacts into memory...")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-model = xgb.XGBClassifier()
+model = xgb.Booster()
 model.load_model(os.path.join(BASE_DIR, "xgboost_addon_model.json"))
 print("[OK] XGBoost model loaded.")
 
@@ -138,9 +138,11 @@ async def get_recommendations(cart: CartPayload):
             cart.cart_size,
             cart.restaurant_rating,
             cart.total_reviews,
-        ]])
+        ]], dtype=np.float32)
 
-        probabilities = model.predict_proba(features)[0]
+        dmatrix = xgb.DMatrix(features)
+        # Booster.predict returns class probabilities for multiclass models
+        probabilities = model.predict(dmatrix)[0]
         top_5_indices = np.argsort(probabilities)[-5:][::-1]
         top_5_items   = [reverse_mapping[idx] for idx in top_5_indices]
 

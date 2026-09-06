@@ -7,5 +7,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY backend/ ./backend/
 
-# Use shell form so $PORT env variable (injected by Render) is expanded at runtime
-CMD uvicorn backend.main:app --host 0.0.0.0 --port ${PORT:-10000}
+# PORT=7860 for HF Spaces; Render injects $PORT automatically
+CMD uvicorn backend.main:app --host 0.0.0.0 --port ${PORT:-7860}
